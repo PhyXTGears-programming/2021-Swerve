@@ -5,24 +5,24 @@
 namespace swervedrive {
 
 template <class T>
-class Vector2D {
+class vector2 {
     public:
-        Vector2D (T xVal, T yVal) : x(xVal), y(yVal) {}
+        vector2 (T xVal, T yVal) : x(xVal), y(yVal) {}
 
         T getX () const { return x; }
         T getY () const { return y; }
 
-        Vector2D<T> operator+ (const Vector2D<T> b) const {
-            return Vector2D<T> {getX() + b.getX(), getY() + b.getY()};
+        vector2<T> operator+ (const vector2<T> b) const {
+            return vector2<T> {getX() + b.getX(), getY() + b.getY()};
         }
 
-        T operator* (const Vector2D<T> b) const {
+        T operator* (const vector2<T> b) const {
             return getX() * b.getX() + getY() * b.getY();
         }
         
         template<class O>
         auto operator* (const O b) const {
-            return Vector2D {getX() * b, + getY() * b};
+            return vector2 {getX() * b, + getY() * b};
         }
     
     private:

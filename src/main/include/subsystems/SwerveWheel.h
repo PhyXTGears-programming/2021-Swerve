@@ -5,13 +5,13 @@
 #include <ctre/phoenix/motorcontrol/can/TalonSRX.h>
 
 #include "Constants.h"
-#include "swerve/vector2d.h"
+#include "swerve/vector2.h"
 
 class SwerveWheel {
     public:
         SwerveWheel(constants::swerve::WheelConstants constants);
 
-        void drive(std::function<swervedrive::Vector2D<double>(constants::Vector)> getSpeed);
+        void drive(std::function<swervedrive::vector2<double>(constants::Vector)> getSpeed);
 
     private:
         void setAngle(double angle);

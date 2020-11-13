@@ -15,7 +15,7 @@ void SwerveDrive::Periodic () {
     // turnBL.setAngle(frc::SmartDashboard::GetNumber("Setpoint (BL)", 0.0));
     // turnBR.setAngle(frc::SmartDashboard::GetNumber("Setpoint (BR)", 0.0));
 
-    std::function<swervedrive::Vector2D<double>(constants::Vector)> getSpeedFunction = [&](constants::Vector location) -> swervedrive::Vector2D<double> {
+    std::function<swervedrive::vector2<double>(constants::Vector)> getSpeedFunction = [&](constants::Vector location) -> swervedrive::vector2<double> {
         return drive.sample_motion({location.x, location.y});
     };
 

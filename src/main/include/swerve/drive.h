@@ -4,7 +4,7 @@
 
 #include <functional>
 
-#include "vector2d.h"
+#include "vector2.h"
 
 namespace swervedrive {
 
@@ -13,17 +13,17 @@ class Drive {
     public:
         Drive () {};
 
-        void set_motion (Vector2D<S> velocity, R angular_velocity) {
-            calc_sample = [=](Vector2D<D> pos) {
-                Vector2D<D> tangent {-1 * pos.getY(), pos.getX()};
+        void set_motion (vector2<S> velocity, R angular_velocity) {
+            calc_sample = [=](vector2<D> pos) {
+                vector2<D> tangent {-1 * pos.getY(), pos.getX()};
                 return velocity + (tangent * angular_velocity);
             };
         };
 
-        Vector2D<S> sample_motion (Vector2D<D> wheel) { return calc_sample(wheel); };
+        vector2<S> sample_motion (vector2<D> wheel) { return calc_sample(wheel); };
 
     private:
-        std::function<Vector2D<S>(Vector2D<D>)> calc_sample = [] (Vector2D<D> _) { return Vector2D<S> {S(), S()}; };
+        std::function<vector2<S>(vector2<D>)> calc_sample = [] (vector2<D> _) { return vector2<S> {S(), S()}; };
 };
 
 }

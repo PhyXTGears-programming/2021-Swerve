@@ -20,7 +20,7 @@ SwerveWheel::SwerveWheel (constants::swerve::WheelConstants constants) {
     turnMotor->Config_kD(0, wheelSettings.tuning.pid.D);
 }
 
-void SwerveWheel::drive (std::function<swervedrive::Vector2D<double>(constants::Vector)> getSpeed) {
+void SwerveWheel::drive (std::function<swervedrive::vector2<double>(constants::Vector)> getSpeed) {
     auto speed = getSpeed(wheelSettings.position);
     setAngle(std::atan2(speed.getY(), speed.getX()));
     setSpeed(std::sqrt(std::pow(speed.getX(), 2) + std::pow(speed.getY(), 2)));
@@ -41,7 +41,7 @@ void SwerveWheel::setAngle (double rad) {
 
     rad -= halfRots * M_PI;
 
-    std::cout << wheelSettings.name << ": " << rad - currentPos << std::endl;
+    // std::cout << wheelSettings.name << ": " << rad - currentPos << std::endl;
 
     turnMotor->Set(ctre::phoenix::motorcontrol::TalonSRXControlMode::Position, radToEncoder(rad));
 }
