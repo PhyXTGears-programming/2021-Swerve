@@ -27,7 +27,7 @@ void Robot::TeleopPeriodic () {
     double x = driver.GetX(frc::GenericHID::kLeftHand);
     double y = -1 * driver.GetY(frc::GenericHID::kLeftHand);
     double r = driver.GetX(frc::GenericHID::kRightHand);
-    m_container.swerveDrive.setMotion(DEADZONE(x) * 0.4, DEADZONE(y) * 0.4, DEADZONE(r) * 0.4);
+    m_container.swerveDrive.setMotion(DEADZONE(x) * 0.6, DEADZONE(y) * 0.6, DEADZONE(r) * 0.35);
 }
 
 void Robot::TestPeriodic () {}

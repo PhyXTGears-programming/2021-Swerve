@@ -4,9 +4,10 @@
 #include <frc/XboxController.h>
 #include <ctre/phoenix/motorcontrol/can/TalonSRX.h>
 
+#include <swerve/drive.h>
+
 #include "Constants.h"
 #include "subsystems/SwerveWheel.h"
-#include "swerve/drive.h"
 
 class SwerveDrive : public frc2::SubsystemBase {
     public:
@@ -17,10 +18,5 @@ class SwerveDrive : public frc2::SubsystemBase {
         void setMotion(double x, double y, double r);
 
     private:
-        SwerveWheel turnFL {constants::swerve::frontLeft};
-        SwerveWheel turnFR {constants::swerve::frontRight};
-        SwerveWheel turnBL {constants::swerve::backLeft};
-        SwerveWheel turnBR {constants::swerve::backRight};
-
-        swervedrive::Drive<double, double, double> drive {};
+        swervedrive::drive<double, double, double>* drive;
 };

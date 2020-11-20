@@ -4,8 +4,9 @@
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <ctre/phoenix/motorcontrol/can/TalonSRX.h>
 
+#include <swerve/vector2.h>
+
 #include "Constants.h"
-#include "swerve/vector2.h"
 
 class SwerveWheel {
     public:
