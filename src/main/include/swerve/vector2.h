@@ -1,6 +1,9 @@
 // Copyright 2020 Robby Sammelson
+// Used with permission
 
 #pragma once
+
+#include <ostream>
 
 namespace swervedrive {
 
@@ -30,4 +33,10 @@ class vector2 {
         T x, y;
 };
 
+}
+
+template <class T>
+std::ostream& operator<< (std::ostream& os, const swervedrive::vector2<T>& vector) {
+      os << "(" << vector.getX() << ", " << vector.getY() << ")";
+      return os;
 }

@@ -1,4 +1,5 @@
 // Copyright 2020 Robby Sammelson
+// Used with permission
 
 #pragma once
 

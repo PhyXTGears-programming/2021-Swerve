@@ -5,8 +5,6 @@
 
 #include <frc/smartdashboard/SmartDashboard.h>
 
-#define PI 3.141592653589
-
 SwerveWheel::SwerveWheel (constants::swerve::WheelConstants constants)
     : swervedrive::swerve_module<double, double, double>(
         swervedrive::vector2<double>{constants.position.x, constants.position.y},
@@ -30,21 +28,21 @@ void SwerveWheel::drive (swervedrive::vector2<double> speed) {
 }
 
 void SwerveWheel::setAngle (double rad) {
-    int currentPos = encoderToRad(turnMotor->GetSelectedSensorPosition());
-    
-    frc::SmartDashboard::PutNumber("Swerve Wheel Rotation (" + wheelSettings.name + ")", currentPos);
-    // frc::SmartDashboard::PutNumber("Swerve Wheel Velocity (" + wheelSettings.name + ")", turnMotor->GetSelectedSensorVelocity());
-    // frc::SmartDashboard::PutNumber("Swerve Wheel Current (" + wheelSettings.name + ")", turnMotor->GetOutputCurrent());
+    double currentPos = encoderToRad(turnMotor->GetSelectedSensorPosition());
 
-    int halfRots = std::round((rad - currentPos) / M_PI);
+    double correction = 2*M_PI * std::floor(currentPos / (2*M_PI) + 0.5);
+    double correctedPosition = currentPos - correction;
 
-    if (halfRots % 2 == 1) {
-        inverted = !inverted;
+    double error = std::abs(rad - correctedPosition);
+    inverted = M_PI/2 < error && error < 3*M_PI/2;
+
+    if (inverted) {
+        if (rad < 0) {
+            rad += M_PI;
+        } else {
+            rad -= M_PI;
+        }
     }
 
-    rad -= halfRots * M_PI;
-
-    // std::cout << wheelSettings.name << ": " << rad - currentPos << std::endl;
-
-    turnMotor->Set(ctre::phoenix::motorcontrol::TalonSRXControlMode::Position, radToEncoder(rad));
+    turnMotor->Set(ctre::phoenix::motorcontrol::TalonSRXControlMode::Position, radToEncoder(rad + correction));
 }

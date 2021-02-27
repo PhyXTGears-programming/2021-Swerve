@@ -17,7 +17,7 @@ class SwerveWheel : public swervedrive::swerve_module<double, double, double> {
 
     private:
         void setAngle(double angle);
-        void setSpeed (double speed) { driveMotor->Set(speed); }
+        void setSpeed (double speed) { driveMotor->Set(inverted ? -speed : speed); }
 
         int radToEncoder (double rad) { return (int)(rad * 651.8986469) + wheelSettings.tuning.zeroVal; }
         double encoderToRad (int encoder) { return (encoder - wheelSettings.tuning.zeroVal) / 651.8986469; }
