@@ -7,7 +7,11 @@
 
 #define PI 3.141592653589
 
-SwerveWheel::SwerveWheel (constants::swerve::WheelConstants constants) {
+SwerveWheel::SwerveWheel (constants::swerve::WheelConstants constants)
+    : swervedrive::swerve_module<double, double, double>(
+        swervedrive::vector2<double>{constants.position.x, constants.position.y},
+        [&](swervedrive::vector2<double> speed) { drive(speed); }
+    ) {
     wheelSettings = constants;
 
     driveMotor = new frc::PWMTalonSRX(wheelSettings.drivePin);
@@ -20,8 +24,7 @@ SwerveWheel::SwerveWheel (constants::swerve::WheelConstants constants) {
     turnMotor->Config_kD(0, wheelSettings.tuning.pid.D);
 }
 
-void SwerveWheel::drive (std::function<swervedrive::vector2<double>(constants::Vector)> getSpeed) {
-    auto speed = getSpeed(wheelSettings.position);
+void SwerveWheel::drive (swervedrive::vector2<double> speed) {
     setAngle(std::atan2(speed.getY(), speed.getX()));
     setSpeed(std::sqrt(std::pow(speed.getX(), 2) + std::pow(speed.getY(), 2)));
 }

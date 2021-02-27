@@ -2,20 +2,12 @@
 
 #include <frc/smartdashboard/SmartDashboard.h>
 
-SwerveDrive::SwerveDrive () {}
-
-void SwerveDrive::Periodic () {
-
-    std::function<swervedrive::vector2<double>(constants::Vector)> getSpeedFunction = [&](constants::Vector location) -> swervedrive::vector2<double> {
-        return drive.sample_motion({location.x, location.y});
-    };
-
-    turnFL.drive(getSpeedFunction);
-    turnFR.drive(getSpeedFunction);
-    turnBL.drive(getSpeedFunction);
-    turnBR.drive(getSpeedFunction);
+SwerveDrive::SwerveDrive () {
+    drive = new swervedrive::drive<double, double, double, double>({flWheel, frWheel, blWheel, brWheel});
 }
 
+void SwerveDrive::Periodic () {}
+
 void SwerveDrive::setMotion (double x, double y, double r) {
-    drive.set_motion({x, y}, r);
+    drive->set_motion({x, y}, r);
 }

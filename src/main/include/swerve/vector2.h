@@ -7,6 +7,7 @@ namespace swervedrive {
 template <class T>
 class vector2 {
     public:
+        vector2 () : x(T()), y(T()) {}
         vector2 (T xVal, T yVal) : x(xVal), y(yVal) {}
 
         T getX () const { return x; }

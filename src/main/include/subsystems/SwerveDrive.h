@@ -18,5 +18,10 @@ class SwerveDrive : public frc2::SubsystemBase {
         void setMotion(double x, double y, double r);
 
     private:
-        swervedrive::drive<double, double, double>* drive;
+        swervedrive::drive<double, double, double, double>* drive;
+
+        SwerveWheel flWheel {constants::swerve::frontLeft};
+        SwerveWheel frWheel {constants::swerve::frontRight};
+        SwerveWheel blWheel {constants::swerve::backLeft};
+        SwerveWheel brWheel {constants::swerve::backRight};
 };

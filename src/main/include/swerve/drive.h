@@ -1,3 +1,5 @@
+// Copyright 2020 Robby Sammelson
+
 #pragma once
 
 #include <functional>
@@ -10,11 +12,11 @@
 
 namespace swervedrive {
 
-template<class D, class S, class R>
+template<class D, class S, class R, class A>
 class drive {
     public:
-        drive (std::initializer_list<swerve_module<D, S>> modules) {
-            drive_modules = new std::vector<swerve_module<D, S>>(modules);
+        drive (std::initializer_list<swerve_module<D, S, A>> modules) {
+            drive_modules = new std::vector<swerve_module<D, S, A>>(modules);
         }
 
         void set_motion (vector2<S> velocity, R angular_velocity) {
@@ -32,7 +34,7 @@ class drive {
             };
         };
 
-        std::vector<swerve_module<D, S>> *drive_modules;
+        std::vector<swerve_module<D, S, A>> *drive_modules;
 };
 
 }
