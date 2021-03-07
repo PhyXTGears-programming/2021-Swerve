@@ -29,7 +29,9 @@ SwerveWheel::SwerveWheel (constants::swerve::WheelConstants constants)
     encoder = new ctre::phoenix::sensors::CANCoder(wheelSettings.encoderID);
     encoder->ConfigAbsoluteSensorRange(ctre::phoenix::sensors::AbsoluteSensorRange::Signed_PlusMinus180);
 
-    constexpr double conversionFactor = 2 * M_PI * 0.1816051; // motor rotations to module rad
+    turnMotor->SetInverted(true);
+
+    constexpr double conversionFactor = 2 * M_PI * 0.01816051; // motor rotations to module rad
     turnMotor->GetEncoder().SetPositionConversionFactor(conversionFactor);
     turnMotor->GetEncoder().SetVelocityConversionFactor(conversionFactor / 60.0); // RPM to rad/s
 
@@ -43,17 +45,24 @@ SwerveWheel::SwerveWheel (constants::swerve::WheelConstants constants)
 }
 
 void SwerveWheel::drive (swervedrive::vector2<double> speed) {
-    setAngle(std::atan2(speed.getY(), speed.getX()));
-    setSpeed(std::sqrt(std::pow(speed.getX(), 2) + std::pow(speed.getY(), 2)));
+    double totalSpeed = std::sqrt(std::pow(speed.getX(), 2) + std::pow(speed.getY(), 2));
+    if (std::fabs(totalSpeed) > 0.01) {
+        setAngle(std::atan2(speed.getY(), speed.getX()));
+    }
+    setSpeed(totalSpeed);
+}
+
+double SwerveWheel::getAngle () {
+    #ifdef TALON_SRX
+    return encoderToRad(turnMotor->GetSelectedSensorPosition());
+    #endif
+    #ifdef SPARK_MAX
+    return turnMotor->GetEncoder().GetPosition();
+    #endif
 }
 
 void SwerveWheel::setAngle (double rad) {
-    #ifdef TALON_SRX
-    double currentPos = encoderToRad(turnMotor->GetSelectedSensorPosition());
-    #endif
-    #ifdef SPARK_MAX
-    double currentPos = turnMotor->GetEncoder().GetPosition();
-    #endif
+    double currentPos = getAngle();
 
     double correction = 2*M_PI * std::floor(currentPos / (2*M_PI) + 0.5);
     double correctedPosition = currentPos - correction;

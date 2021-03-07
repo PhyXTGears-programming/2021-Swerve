@@ -21,6 +21,8 @@ class SwerveWheel : public swervedrive::swerve_module<double, double, double> {
 
         void drive(swervedrive::vector2<double> speed);
 
+        double getAngle();
+
     private:
         void setAngle(double angle);
         void setSpeed (double speed) {

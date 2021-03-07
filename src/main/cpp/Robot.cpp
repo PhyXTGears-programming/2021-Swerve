@@ -5,9 +5,11 @@
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <frc2/command/CommandScheduler.h>
 
-#define DEADZONE(v) (std::abs(v) < 0.1 ? 0 : v)
+#define DEADZONE(v) (std::abs(v) < 0.05 ? 0 : v)
 
-void Robot::RobotInit () {}
+void Robot::RobotInit () {
+    std::cout << std::fixed;
+}
 
 void Robot::RobotPeriodic () {
     frc2::CommandScheduler::GetInstance().Run();

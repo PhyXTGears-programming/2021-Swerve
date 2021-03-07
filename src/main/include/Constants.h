@@ -17,7 +17,12 @@ namespace constants {
     namespace swerve {
         struct WheelSpinTuning {
             PIDTuning pid;
-            int zeroVal; // value encoder reads when pointing foreward
+            #ifdef TALON_SRX
+            int zeroVal; // value encoder reads when pointing forward
+            #endif
+            #ifdef SPARK_MAX
+            double zeroVal; // value encoder reads when pointing forward (rad)
+            #endif
         };
 
         struct WheelConstants {
@@ -38,10 +43,10 @@ namespace constants {
         const WheelConstants backRight  = {"Back Right",  3, 4, { 1.09, -0.87}, {{0.7,   0,     0.8},   1248}};
         #endif
         #ifdef SPARK_MAX
-        const WheelConstants frontLeft  = {"Front Left",  1, 5, {-1.014,  1.014}, {{0, 0, 0}, 0}, 9};
-        const WheelConstants frontRight = {"Front Right", 4, 8, { 1.014,  1.014}, {{0, 0, 0}, 0}, 12};
-        const WheelConstants backLeft   = {"Back Left",   2, 6, {-1.014, -1.014}, {{0, 0, 0}, 0}, 10};
-        const WheelConstants backRight  = {"Back Right",  3, 7, { 1.014, -1.014}, {{0, 0, 0}, 0}, 11};
+        const WheelConstants frontLeft  = {"Front Left",  5, 1, {-1.014,  1.014}, {{0.5, 0, 0}, -2.119962}, 9};
+        const WheelConstants frontRight = {"Front Right", 8, 4, { 1.014,  1.014}, {{0.5, 0, 0},  0.372757}, 12};
+        const WheelConstants backLeft   = {"Back Left",   6, 2, {-1.014, -1.014}, {{0.5, 0, 0}, -1.714991}, 10};
+        const WheelConstants backRight  = {"Back Right",  7, 3, { 1.014, -1.014}, {{0.5, 0, 0}, -0.888175}, 11};
         #endif
     }
 }
