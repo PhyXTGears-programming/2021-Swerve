@@ -5,6 +5,8 @@
 
 #include <frc/smartdashboard/SmartDashboard.h>
 
+#include "swerve/rotation.h"
+
 SwerveWheel::SwerveWheel (constants::swerve::WheelConstants constants)
     : swervedrive::swerve_module<double, double, double>(
         swervedrive::vector2<double>{constants.position.x, constants.position.y}
@@ -60,26 +62,13 @@ double SwerveWheel::getAngle () {
 }
 
 void SwerveWheel::setAngle (double rad) {
-    double currentPos = getAngle();
-
-    double correction = 2*M_PI * std::floor(currentPos / (2*M_PI) + 0.5);
-    double correctedPosition = currentPos - correction;
-
-    double error = std::abs(rad - correctedPosition);
-    inverted = M_PI/2 < error && error < 3*M_PI/2;
-
-    if (inverted) {
-        if (rad < 0) {
-            rad += M_PI;
-        } else {
-            rad -= M_PI;
-        }
-    }
+    std::pair<double, bool> result = swervedrive::module_rotation::calculate_rotation_target(rad, getAngle());
+    inverted = result.second;
 
     #ifdef TALON_SRX
-    turnMotor->Set(ctre::phoenix::motorcontrol::TalonSRXControlMode::Position, radToEncoder(rad + correction));
+    turnMotor->Set(ctre::phoenix::motorcontrol::TalonSRXControlMode::Position, radToEncoder(result.first));
     #endif
     #ifdef SPARK_MAX
-    turnMotor->GetPIDController().SetReference(rad, rev::ControlType::kPosition);
+    turnMotor->GetPIDController().SetReference(result.first, rev::ControlType::kPosition);
     #endif
 }
