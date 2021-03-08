@@ -7,8 +7,7 @@
 
 SwerveWheel::SwerveWheel (constants::swerve::WheelConstants constants)
     : swervedrive::swerve_module<double, double, double>(
-        swervedrive::vector2<double>{constants.position.x, constants.position.y},
-        [&](swervedrive::vector2<double> speed) { drive(speed); }
+        swervedrive::vector2<double>{constants.position.x, constants.position.y}
     ) {
     wheelSettings = constants;
 
@@ -44,12 +43,11 @@ SwerveWheel::SwerveWheel (constants::swerve::WheelConstants constants)
     #endif
 }
 
-void SwerveWheel::drive (swervedrive::vector2<double> speed) {
-    double totalSpeed = std::sqrt(std::pow(speed.getX(), 2) + std::pow(speed.getY(), 2));
-    if (std::fabs(totalSpeed) > 0.01) {
-        setAngle(std::atan2(speed.getY(), speed.getX()));
+void SwerveWheel::drive (double speed, double angle) {
+    if (std::fabs(speed) > 0.01) {
+        setAngle(angle);
     }
-    setSpeed(totalSpeed);
+    setSpeed(speed);
 }
 
 double SwerveWheel::getAngle () {

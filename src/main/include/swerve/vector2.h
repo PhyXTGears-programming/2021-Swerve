@@ -13,20 +13,25 @@ class vector2 {
         vector2 () : x(T()), y(T()) {}
         vector2 (T xVal, T yVal) : x(xVal), y(yVal) {}
 
-        T getX () const { return x; }
-        T getY () const { return y; }
+        T get_x () const { return x; }
+        T get_y () const { return y; }
 
         vector2<T> operator+ (const vector2<T> b) const {
-            return vector2<T> {getX() + b.getX(), getY() + b.getY()};
+            return vector2<T> {get_x() + b.get_x(), get_y() + b.get_y()};
         }
 
         T operator* (const vector2<T> b) const {
-            return getX() * b.getX() + getY() * b.getY();
+            return get_x() * b.get_x() + get_y() * b.get_y();
         }
         
         template<class O>
-        auto operator* (const O b) const {
-            return vector2 {getX() * b, + getY() * b};
+        auto operator* (const O b) const -> vector2<decltype(T()*O())> {
+            return {get_x() * b, + get_y() * b};
+        }
+        
+        template<class O>
+        auto operator/ (const O b) const -> vector2<decltype(T()/O())> {
+            return {get_x() / b, + get_y() / b};
         }
     
     private:
@@ -37,6 +42,6 @@ class vector2 {
 
 template <class T>
 std::ostream& operator<< (std::ostream& os, const swervedrive::vector2<T>& vector) {
-      os << "(" << vector.getX() << ", " << vector.getY() << ")";
-      return os;
+    os << "(" << vector.get_x() << ", " << vector.get_y() << ")";
+    return os;
 }
