@@ -27,10 +27,11 @@ SwerveWheel::SwerveWheel (constants::swerve::WheelConstants constants)
     driveMotor = new rev::CANSparkMax(wheelSettings.drivePin, rev::CANSparkMax::MotorType::kBrushless);
     turnMotor = new rev::CANSparkMax(wheelSettings.turnPin, rev::CANSparkMax::MotorType::kBrushless);
 
+    driveMotor->SetInverted(false);
+    turnMotor->SetInverted(true);
+
     encoder = new ctre::phoenix::sensors::CANCoder(wheelSettings.encoderID);
     encoder->ConfigAbsoluteSensorRange(ctre::phoenix::sensors::AbsoluteSensorRange::Signed_PlusMinus180);
-
-    turnMotor->SetInverted(true);
 
     constexpr double conversionFactor = 2 * M_PI * 0.01816051; // motor rotations to module rad
     turnMotor->GetEncoder().SetPositionConversionFactor(conversionFactor);
@@ -62,7 +63,14 @@ double SwerveWheel::getAngle () {
 }
 
 void SwerveWheel::setAngle (double rad) {
-    std::pair<double, bool> result = swervedrive::module_rotation::calculate_rotation_target(rad, getAngle());
+    #ifdef TALON_SRX
+    double correction = 0;
+    #endif
+    #ifdef SPARK_MAX
+    double correction = std::copysign(0.04, turnMotor->GetEncoder().GetVelocity()); // add correction to account for lag and momentum
+    #endif
+
+    std::pair<double, bool> result = swervedrive::module_rotation::calculate_rotation_target(rad, getAngle() + correction);
     inverted = result.second;
 
     #ifdef TALON_SRX

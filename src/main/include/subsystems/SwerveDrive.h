@@ -3,6 +3,7 @@
 #include <frc2/command/SubsystemBase.h>
 #include <frc/XboxController.h>
 #include <ctre/phoenix/motorcontrol/can/TalonSRX.h>
+#include <adi/ADIS16470_IMU.h>
 
 #include <swerve/drive.h>
 
@@ -11,7 +12,7 @@
 
 class SwerveDrive : public frc2::SubsystemBase {
     public:
-        SwerveDrive();
+        SwerveDrive(bool fieldOriented = false);
 
         void Periodic() override;
 
@@ -24,4 +25,8 @@ class SwerveDrive : public frc2::SubsystemBase {
         SwerveWheel frWheel {constants::swerve::frontRight};
         SwerveWheel blWheel {constants::swerve::backLeft};
         SwerveWheel brWheel {constants::swerve::backRight};
+
+        frc::ADIS16470_IMU gyro {};
+
+        bool fieldOriented;
 };
