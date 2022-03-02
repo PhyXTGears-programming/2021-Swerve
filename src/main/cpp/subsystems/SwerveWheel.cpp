@@ -26,7 +26,9 @@ SwerveWheel::SwerveWheel (constants::swerve::WheelConstants constants)
     #ifdef SPARK_MAX
     driveMotor = new rev::CANSparkMax(wheelSettings.drivePin, rev::CANSparkMax::MotorType::kBrushless);
     turnMotor = new rev::CANSparkMax(wheelSettings.turnPin, rev::CANSparkMax::MotorType::kBrushless);
-
+    turnEncoder.emplace(turnMotor->GetEncoder());
+    turnPid.emplace(turnMotor->GetPIDController());
+    
     driveMotor->SetInverted(false);
     turnMotor->SetInverted(true);
 
@@ -34,15 +36,15 @@ SwerveWheel::SwerveWheel (constants::swerve::WheelConstants constants)
     encoder->ConfigAbsoluteSensorRange(ctre::phoenix::sensors::AbsoluteSensorRange::Signed_PlusMinus180);
 
     constexpr double conversionFactor = 2 * M_PI * 0.01816051; // motor rotations to module rad
-    turnMotor->GetEncoder().SetPositionConversionFactor(conversionFactor);
-    turnMotor->GetEncoder().SetVelocityConversionFactor(conversionFactor / 60.0); // RPM to rad/s
+    turnEncoder->SetPositionConversionFactor(conversionFactor);
+    turnEncoder->SetVelocityConversionFactor(conversionFactor / 60.0); // RPM to rad/s
 
     double currentAngle = encoder->GetAbsolutePosition() * (M_PI / 180.0); // [-180, 180) to [-pi, pi)
-    turnMotor->GetEncoder().SetPosition(currentAngle - wheelSettings.tuning.zeroVal);
+    turnEncoder->SetPosition(currentAngle - wheelSettings.tuning.zeroVal);
 
-    turnMotor->GetPIDController().SetP(wheelSettings.tuning.pid.P);
-    turnMotor->GetPIDController().SetI(wheelSettings.tuning.pid.I);
-    turnMotor->GetPIDController().SetD(wheelSettings.tuning.pid.D);
+    turnPid->SetP(wheelSettings.tuning.pid.P);
+    turnPid->SetI(wheelSettings.tuning.pid.I);
+    turnPid->SetD(wheelSettings.tuning.pid.D);
     #endif
 }
 
@@ -58,7 +60,7 @@ double SwerveWheel::getAngle () {
     return encoderToRad(turnMotor->GetSelectedSensorPosition());
     #endif
     #ifdef SPARK_MAX
-    return turnMotor->GetEncoder().GetPosition();
+    return turnEncoder->GetPosition();
     #endif
 }
 
@@ -67,9 +69,10 @@ void SwerveWheel::setAngle (double rad) {
     double correction = 0;
     #endif
     #ifdef SPARK_MAX
-    double correction = std::copysign(0.04, turnMotor->GetEncoder().GetVelocity()); // add correction to account for lag and momentum
+    double correction = std::copysign(0.04, turnEncoder->GetVelocity()); // add correction to account for lag and momentum
     #endif
 
+    std::cout << "target heading  " << rad << " , " << "current heading " << getAngle() << std::endl;
     std::pair<double, bool> result = swervedrive::module_rotation::calculate_rotation_target(rad, getAngle() + correction);
     inverted = result.second;
 
@@ -77,6 +80,6 @@ void SwerveWheel::setAngle (double rad) {
     turnMotor->Set(ctre::phoenix::motorcontrol::TalonSRXControlMode::Position, radToEncoder(result.first));
     #endif
     #ifdef SPARK_MAX
-    turnMotor->GetPIDController().SetReference(result.first, rev::ControlType::kPosition);
+    turnPid->SetReference(result.first, rev::CANSparkMax::ControlType::kPosition);
     #endif
 }

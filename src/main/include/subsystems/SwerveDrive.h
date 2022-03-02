@@ -2,8 +2,8 @@
 
 #include <frc2/command/SubsystemBase.h>
 #include <frc/XboxController.h>
-#include <ctre/phoenix/motorcontrol/can/TalonSRX.h>
-#include <adi/ADIS16470_IMU.h>
+// #include <ctre/phoenix/motorcontrol/can/TalonSRX.h>
+// #include <adi/ADIS16470_IMU.h>
 
 #include <swerve/drive.h>
 
@@ -19,6 +19,7 @@ class SwerveDrive : public frc2::SubsystemBase {
         void setMotion(double x, double y, double r);
 
     private:
+    public: // FIXME
         swervedrive::drive<double, double, double>* drive;
 
         SwerveWheel flWheel {constants::swerve::frontLeft};
@@ -26,7 +27,7 @@ class SwerveDrive : public frc2::SubsystemBase {
         SwerveWheel blWheel {constants::swerve::backLeft};
         SwerveWheel brWheel {constants::swerve::backRight};
 
-        frc::ADIS16470_IMU gyro {};
+        // frc::ADIS16470_IMU gyro {};
 
         bool fieldOriented;
 };

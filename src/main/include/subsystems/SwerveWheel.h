@@ -4,7 +4,7 @@
 #include "Constants.h"
 
 #ifdef TALON_SRX
-#include <frc/PWMTalonSRX.h>
+#include <frc/motorcontrol/PWMTalonSRX.h>
 #include <ctre/phoenix/motorcontrol/can/TalonSRX.h>
 #endif
 #ifdef SPARK_MAX
@@ -24,6 +24,7 @@ class SwerveWheel : public swervedrive::swerve_module<double, double, double> {
         double getAngle();
 
     private:
+    public:  // FIXME
         void setAngle(double angle);
         void setSpeed (double speed) {
             driveMotor->Set(inverted ? -speed : speed);
@@ -42,6 +43,8 @@ class SwerveWheel : public swervedrive::swerve_module<double, double, double> {
         #endif
         #ifdef SPARK_MAX
         rev::CANSparkMax *driveMotor, *turnMotor;
+        std::optional<rev::SparkMaxRelativeEncoder> turnEncoder;
+        std::optional<rev::SparkMaxPIDController> turnPid;
         ctre::phoenix::sensors::CANCoder* encoder;
         #endif
 

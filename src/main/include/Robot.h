@@ -1,9 +1,11 @@
 #pragma once
 
+#define SMART_MAX
+
 #include <frc/TimedRobot.h>
 #include <frc2/command/Command.h>
 #include <frc/XboxController.h>
-#include <frc/PWMTalonSRX.h>
+#include <frc/motorcontrol/PWMTalonSRX.h>
 
 #include "RobotContainer.h"
 

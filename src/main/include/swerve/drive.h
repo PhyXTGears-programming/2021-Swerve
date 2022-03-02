@@ -6,6 +6,7 @@
 #include <functional>
 #include <initializer_list>
 #include <vector>
+#include <iostream>
 
 #include "swerve_module.h"
 #include "types.h"
@@ -35,13 +36,19 @@ class drive {
             F angular_velocity_no_angle = M::arc_length(angular_velocity/F(1)) * F(1) / D(1);
 
             // Get the function representing the vector field
-            motion_function<D, F, A> motion_function = [=](vector2<D> pos) -> std::pair<decltype(D()*F()), A> {
+            motion_function<D, F, A> motion_function = [=](vector2<D> pos, std::string name = "") -> std::pair<decltype(D()*F()), A> {
                 // Get rotational component of motion
                 vector2<D> tangent {-1 * pos.get_y(), pos.get_x()};
                 vector2<decltype(D()*F())> angularComponent = tangent * angular_velocity_no_angle;
 
                 // Get total motion
                 vector2<decltype(D()*F())> motion = translational_component + angularComponent;
+
+                // std::cout << "drive : " << name << "  polar( "
+                //     << M::sqrt(motion.get_x()*motion.get_x() + motion.get_y()*motion.get_y())
+                //     << ", "
+                //     << M::atan2(motion.get_y(), motion.get_x())
+                //     << " )" << std::endl;
 
                 // Convert motion to polar coordinates
                 return {

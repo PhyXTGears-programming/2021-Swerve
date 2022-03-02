@@ -23,7 +23,7 @@ class swerve_module {
             drive_lambda = drive_function;
         }
 
-        void set_motion (motion_function<D, F, A> mF) {
+        void set_motion (motion_function<D, F, A> mF, std::string name = "") {
             auto motion = mF(pos);
             drive(motion.first, motion.second);
         }

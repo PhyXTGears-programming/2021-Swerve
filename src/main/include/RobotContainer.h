@@ -10,7 +10,7 @@ class RobotContainer {
 
         frc2::Command* GetAutonomousCommand();
 
-        SwerveDrive swerveDrive {true};
+        SwerveDrive swerveDrive {false};
 
     private:
         void ConfigureButtonBindings();
